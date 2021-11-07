@@ -20,6 +20,7 @@ public class App {
             System.out.println("---------МЕНЮ---------");
             System.out.println("1. Выход из программы");
             System.out.println("2. Добавить кроссовок");
+            System.out.println("3. Вывести список кроссовок");
             System.out.print("Выберите задачу: ");
             Scanner scan = new Scanner(System.in);
             int task= scan.nextInt(); scan.nextLine();
