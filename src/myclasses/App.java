@@ -143,7 +143,7 @@ private void purchase(){
     System.out.println("*ПОКУПКА ОБУВИ*"); 
     System.out.println("-----------------------------");
     sneakerList();
-    System.out.print("Выберите нужную модель обуви:");
+    System.out.print("Выберите нужную модель обуви: ");
     int sneakerNum= scan.nextInt(); scan.nextLine();
     System.out.println("-----------------------------");
     buyerList();
@@ -174,7 +174,7 @@ private void purchase(){
 //------------------------------------------------------------------------------
 private void income(){
     System.out.println("*ДОХОД МАГАЗИНА*");
-    System.out.printf("Выручка магазина составляет: %.2f%n",income.getGeneralMoney());
+    System.out.printf("Выручка магазина составляет: %.2f евро%n",income.getGeneralMoney());
 }
 }
 
