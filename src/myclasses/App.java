@@ -5,6 +5,7 @@
  */
 package myclasses;
 
+
 import entity.Sneaker;
 import entity.Buyer;
 import entity.History;
@@ -12,8 +13,10 @@ import entity.Income;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 
 /**
@@ -32,11 +35,13 @@ public class App {
             System.out.println("---------МЕНЮ---------");
             System.out.println("1. Выход из программы");
             System.out.println("2. Добавить кроссовок");
+            System.out.println("3. Вывести список кроссовок");
             System.out.println("3. Список продаваемых кроссовок");
             System.out.println("4. Добавить покупателя");
             System.out.println("5. Список покупателей");
             System.out.println("6. Покупка обуви");
             System.out.println("7. Доход магазина за все время");
+            System.out.println("8. Добавить деньги пользователю");
             System.out.print("Выберите задачу: ");
             int task= scan.nextInt(); scan.nextLine();
             switch(task){
@@ -61,6 +66,9 @@ public class App {
                 case 7:
                     income();
                     break;
+                case 8:
+                    addMoney();
+                    break;
                 default:
                     System.out.println("Выберите номер из списка!");
             }
@@ -74,12 +82,13 @@ private void sneakerList(){
     int n=0;
     for (int i = 0; i < sneakers.size(); i++) {
         if(sneakers.get(i)!=null){
-            System.out.printf("%d. %s %s, размер: %.1f, цена: %.2f евро%n",
+            System.out.printf("%d. %s %s, размер: %.1f, цена: %.2f евро, в наличии: %d%n",
             i+1,
             sneakers.get(i).getSneakerFirm(),
             sneakers.get(i).getSneakerModel(),
             sneakers.get(i).getSneakerSize(),
-            sneakers.get(i).getSneakerPrice()
+            sneakers.get(i).getSneakerPrice(),
+            sneakers.get(i).getSneakerQuantity()
             );
             n++;
         }
@@ -112,6 +121,8 @@ private void buyerList(){
 private void addSneaker(){
     System.out.println("*ДОБАВЛЕНИЕ КРОССОВКА*");
     Sneaker sneaker= new Sneaker();
+    System.out.print("Введите количество кроссовок для добавления: ");
+    sneaker.setSneakerQuantity(scan.nextInt()); scan.nextLine();
     System.out.print("Введите фирму кроссовка: ");
     sneaker.setSneakerFirm(scan.nextLine()); 
     System.out.print("Введите модель кроссовка: ");
@@ -166,6 +177,7 @@ private void purchase(){
         );
         history.getBuyer().setBuyerMoney(history.getBuyer().getBuyerMoney()-history.getSneaker().getSneakerPrice());
         income.setGeneralMoney(income.getGeneralMoney()+history.getSneaker().getSneakerPrice());
+        history.getSneaker().setSneakerQuantity(history.getSneaker().getSneakerQuantity()-1);
         histories.add(history);
     }else{
         System.out.println("Этот пользователь не может совершить покупку, так как у него не хватает денег!");
@@ -176,6 +188,16 @@ private void income(){
     System.out.println("*ДОХОД МАГАЗИНА*");
     System.out.printf("Выручка магазина составляет: %.2f евро%n",income.getGeneralMoney());
 }
+//------------------------------------------------------------------------------
+private void addMoney(){
+    System.out.println("*ДОБАВИТЬ ДЕНЬГИ ПОКУПАТЕЛЮ*");
+    buyerList();
+    System.out.print("Выберите нужного покупателя: ");
+    int choice= scan.nextInt(); scan.nextLine();
+    System.out.print("Введите сколько денег вы хотите добавить этому покупателю: ");
+    int add= scan.nextInt(); scan.nextLine();
+    buyers.get(choice-1).setBuyerMoney(buyers.get(choice-1).getBuyerMoney()+add);
+    }
 }
 
 

@@ -14,6 +14,7 @@ public class Sneaker {
     private String sneakerModel;
     private double sneakerSize;
     private double sneakerPrice;
+    private int sneakerQuantity;
 
 
     public String getSneakerFirm() {
@@ -47,8 +48,16 @@ public class Sneaker {
     public void setSneakerPrice(double sneakerPrice) {
         this.sneakerPrice = sneakerPrice;
     }
+
+    public int getSneakerQuantity() {
+        return sneakerQuantity;
+    }
+
+    public void setSneakerQuantity(int quantity) {
+        this.sneakerQuantity = quantity;
+    }
     @Override
     public String toString() {
-        return " кроссовок: " + sneakerFirm +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро" + ' ';
+        return " кроссовок: " + sneakerFirm +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро, " + sneakerQuantity + " шт." + ' ';
     }
 }
