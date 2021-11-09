@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Deniss
  */
-public class Income {
+public class Income implements Serializable {
     private double generalMoney;
 
     public double getGeneralMoney() {

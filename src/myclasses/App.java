@@ -28,12 +28,13 @@ public class App {
     private List<Buyer> buyers= new ArrayList<>();
     private List<History> histories= new ArrayList<>();
     private final SaverToFiles saverToFiles = new SaverToFiles();
-    Income income = new Income();
+    private List<Income> incomes = new ArrayList<>();
     
     public App(){
     sneakers = saverToFiles.loadSneaker();
     buyers = saverToFiles.loadBuyers();
     histories = saverToFiles.loadHistory();
+    incomes = saverToFiles.loadIncome();
     }   
 
     public void run(){
@@ -89,7 +90,7 @@ private void sneakerList(){
     int n=0;
     for (int i = 0; i < sneakers.size(); i++) {
         if(sneakers.get(i)!=null){
-            System.out.printf("%d. %s %s, размер: %.1f, цена: %.2f евро, в наличии: %d%n",
+            System.out.printf("%d. %s %s, размер: %.0f, цена: %.2f евро, в наличии: %d%n",
             i+1,
             sneakers.get(i).getSneakerFirm(),
             sneakers.get(i).getSneakerModel(),
@@ -187,10 +188,13 @@ private void purchase(){
             history.getGivenSneaker()
             );
             history.getBuyer().setBuyerMoney(history.getBuyer().getBuyerMoney()-history.getSneaker().getSneakerPrice());
-            income.setGeneralMoney(income.getGeneralMoney()+history.getSneaker().getSneakerPrice());
+            Income income = new Income();
+            incomes.get(0).setGeneralMoney(income.getGeneralMoney()+history.getSneaker().getSneakerPrice());
             history.getSneaker().setSneakerQuantity(history.getSneaker().getSneakerQuantity()-1);
+            incomes.add(income);
             histories.add(history);
             saverToFiles.saveHistory(histories);
+            saverToFiles.saveIncome(incomes);
             n++;
         }else if(history.getBuyer().getBuyerMoney()<history.getSneaker().getSneakerPrice()){
             System.out.println("Этот пользователь не может совершить покупку, так как у него не хватает денег на этот товар, выберите другой товар!");   
@@ -202,7 +206,7 @@ private void purchase(){
 //------------------------------------------------------------------------------
 private void income(){
     System.out.println("*ДОХОД МАГАЗИНА*");
-    System.out.printf("Выручка магазина составляет: %.2f евро%n",income.getGeneralMoney());
+    System.out.printf("Выручка магазина составляет: %.2f евро%n",incomes.get(0).getGeneralMoney());
 }
 //------------------------------------------------------------------------------
 private void addMoney(){

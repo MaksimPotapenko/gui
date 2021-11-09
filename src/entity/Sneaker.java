@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author krasa
  */
-public class Sneaker {
+public class Sneaker implements Serializable {
     private String sneakerFirm;
     private String sneakerModel;
     private double sneakerSize;

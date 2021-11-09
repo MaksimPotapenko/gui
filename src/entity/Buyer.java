@@ -5,11 +5,13 @@
  */
 package entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Deniss
  */
-public class Buyer {
+public class Buyer implements Serializable {
     private String buyerFirstName;
     private String buyerLastName;
     private String buyerPhone;
@@ -49,6 +51,6 @@ public class Buyer {
     }
     @Override
     public String toString() {
-        return "покупатель: " + buyerFirstName +" "+ buyerLastName + ", номер телефона: " + buyerPhone + ", деньги: " + buyerMoney +" евро"+' ';
+        return "покупателя: " + buyerFirstName +" "+ buyerLastName + ", номер телефона: " + buyerPhone + ", деньги: " + buyerMoney +" евро"+' ';
     }
 }
