@@ -5,13 +5,12 @@
  */
 package tools;
 
+import entity.Brand;
 import entity.Sneaker;
 import entity.History;
 import entity.Buyer;
-import entity.Income;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,13 +131,15 @@ public class SaverToFiles implements Keeping{
         }
         return histories;
     }
-    public void saveIncome(List<Income> incomes){
+    
+    @Override
+    public void saveBrand(List<Brand> brands){
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = new FileOutputStream("income");
+            fos = new FileOutputStream("brands");
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(incomes);
+            oos.writeObject(brands);
             oos.flush();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, null, ex);
@@ -148,21 +149,21 @@ public class SaverToFiles implements Keeping{
     }
 
     @Override
-    public List<Income> loadIncome() {
+    public List<Brand> loadBrand() {
         FileInputStream fis = null;
         ObjectInputStream ois = null;
-        List<Income> incomes = new ArrayList<>();
+        List<Brand> brands = new ArrayList<>();
         try {
-            fis = new FileInputStream("income");
+            fis = new FileInputStream("brands");
             ois = new ObjectInputStream(fis);
-            incomes = (List<Income>) ois.readObject();
+            brands = (List<Brand>) ois.readObject();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "sneaker еше не создан", ex);
+            Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "brands еше не создан", ex);
         } catch (IOException ex) {
             Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Ошибка чтения", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SaverToFiles.class.getName()).log(Level.SEVERE, "Нет такого файла", ex);
         }
-        return incomes;
+        return brands;
     }
 }

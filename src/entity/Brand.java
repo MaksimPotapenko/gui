@@ -11,14 +11,15 @@ import java.io.Serializable;
  *
  * @author Deniss
  */
-public class Income implements Serializable {
-    private double generalMoney;
+public class Brand implements Serializable {
+    private String brand;
 
-    public double getGeneralMoney() {
-        return generalMoney;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setGeneralMoney(double generalMoney) {
-        this.generalMoney = generalMoney;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
+    
 }

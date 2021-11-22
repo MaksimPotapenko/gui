@@ -12,20 +12,12 @@ import java.io.Serializable;
  * @author krasa
  */
 public class Sneaker implements Serializable {
-    private String sneakerFirm;
+    private Brand sneakerFirm;
     private String sneakerModel;
     private double sneakerSize;
     private double sneakerPrice;
     private int sneakerQuantity;
 
-
-    public String getSneakerFirm() {
-        return sneakerFirm;
-    }
-
-    public void setSneakerFirm(String sneakerFirm) {
-        this.sneakerFirm = sneakerFirm;
-    }
 
     public String getSneakerModel() {
         return sneakerModel;
@@ -60,6 +52,14 @@ public class Sneaker implements Serializable {
     }
     @Override
     public String toString() {
-        return " кроссовок: " + sneakerFirm +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро, " + sneakerQuantity + " шт." + ' ';
+        return " кроссовок: " + sneakerFirm.getBrand() +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро, " + sneakerQuantity + " шт." + ' ';
+    }
+
+    public Brand getSneakerFirm() {
+        return sneakerFirm;
+    }
+
+    public void setSneakerFirm(Brand sneakerFirm) {
+        this.sneakerFirm = sneakerFirm;
     }
 }
