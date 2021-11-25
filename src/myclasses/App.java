@@ -10,12 +10,14 @@ import entity.Brand;
 import entity.Sneaker;
 import entity.Buyer;
 import entity.History;
+import interfaces.Keeping;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import tools.SaverToBase;
 import tools.SaverToFiles;
 
 
@@ -30,12 +32,13 @@ public class App {
     private List<History> histories= new ArrayList<>();
     private final SaverToFiles saverToFiles = new SaverToFiles();
     private List<Brand> brands = new ArrayList<>();
+    private final Keeping saver = new SaverToBase();
     
     public App(){
-    sneakers = saverToFiles.loadSneaker();
-    buyers = saverToFiles.loadBuyers();
-    histories = saverToFiles.loadHistory();
-    brands = saverToFiles.loadBrand();
+    this.sneakers = saver.loadSneaker();
+    this.buyers = saver.loadBuyers();
+    this.histories = saver.loadHistory();
+    this.brands = saver.loadBrand();
     }   
 
     public void run(){
@@ -184,8 +187,8 @@ private void addSneaker(){
     sneaker.setSneakerPrice(scan.nextDouble()); scan.nextLine();
     System.out.println("Вы добавили"+sneaker.toString());
     sneakers.add(sneaker);
-    saverToFiles.saveSneaker(sneakers);
-    saverToFiles.saveBrand(brands);
+    saver.saveSneaker(sneakers);
+    saver.saveBrand(brands);
 }  
 //------------------------------------------------------------------------------
 private void addBuyer(){
@@ -201,7 +204,7 @@ private void addBuyer(){
     buyer.setBuyerMoney(scan.nextDouble()); scan.nextLine();
     System.out.println("Вы добавили "+buyer.toString());
     buyers.add(buyer);
-    saverToFiles.saveBuyers(buyers);
+    saver.saveBuyers(buyers);
 }
 //------------------------------------------------------------------------------
 private void purchase(){
@@ -234,9 +237,9 @@ private void purchase(){
             history.getBuyer().setBuyerMoney(history.getBuyer().getBuyerMoney()-history.getSneaker().getSneakerPrice());
             history.getSneaker().setSneakerQuantity(history.getSneaker().getSneakerQuantity()-1);
             histories.add(history);
-            saverToFiles.saveHistory(histories);
-            saverToFiles.saveSneaker(sneakers);
-            saverToFiles.saveBuyers(buyers);
+            saver.saveHistory(histories);
+            saver.saveSneaker(sneakers);
+            saver.saveBuyers(buyers);
             
             n++;
         }else if(history.getBuyer().getBuyerMoney()<history.getSneaker().getSneakerPrice()){
@@ -268,7 +271,7 @@ private void addMoney(){
     System.out.print("Введите сколько денег вы хотите добавить этому покупателю: ");
     double add= scan.nextDouble(); scan.nextLine();
     buyers.get(choice-1).setBuyerMoney(buyers.get(choice-1).getBuyerMoney()+add);
-    saverToFiles.saveBuyers(buyers);
+    saver.saveBuyers(buyers);
     }
 //------------------------------------------------------------------------------
 private int getNumber(){
@@ -295,7 +298,7 @@ private void addQuantitySneaker(){
     System.out.print("Введите сколько пар кроссовок поступило: ");
     int add=getNumber();
     sneakers.get(num-1).setSneakerQuantity(sneakers.get(num-1).getSneakerQuantity()+add);
-    saverToFiles.saveSneaker(sneakers);}
+    saver.saveSneaker(sneakers);}
 //------------------------------------------------------------------------------
 private void listBrands(){
     int n =0;
@@ -345,15 +348,15 @@ private void changeSneaker(){
                     sneakers.get(numsneaker-1).getSneakerFirm().setBrand(newBrand);
                     newnewBrand.setBrand(newBrand);
                     brands.add(newnewBrand);
-                    saverToFiles.saveSneaker(sneakers);
-                    saverToFiles.saveBrand(brands);
+                    saver.saveSneaker(sneakers);
+                    saver.saveBrand(brands);
                     i++;
                     break;
                 case 0:
                     System.out.print("Введите номер нужной фирмы: ");
                     int choice2=getNumber();
                     sneakers.get(numsneaker-1).setSneakerFirm(brands.get(choice2-1));
-                    saverToFiles.saveSneaker(sneakers);
+                    saver.saveSneaker(sneakers);
                     i++;
                     break;
                 default:
@@ -366,25 +369,25 @@ private void changeSneaker(){
             System.out.print("Введите новую модель кроссовок: ");
             String newaspect=(scan.nextLine());
             sneakers.get(numsneaker-1).setSneakerModel(newaspect);
-            saverToFiles.saveSneaker(sneakers);
+            saver.saveSneaker(sneakers);
             break;
         case 3:
             System.out.print("Введите новый размер кроссовок: ");
             int newaspect2=getNumber();
             sneakers.get(numsneaker-1).setSneakerSize(newaspect2);
-            saverToFiles.saveSneaker(sneakers);
+            saver.saveSneaker(sneakers);
             break;
         case 4:
             System.out.print("Введите новую цену кроссовок: ");
             double newaspect3=scan.nextDouble();scan.nextLine();
             sneakers.get(numsneaker-1).setSneakerPrice(newaspect3);
-            saverToFiles.saveSneaker(sneakers);
+            saver.saveSneaker(sneakers);
             break;
         case 5:
            System.out.print("Введите новое количество кроссовок: ");
             int newaspect4=getNumber();
             sneakers.get(numsneaker-1).setSneakerQuantity(newaspect4);
-            saverToFiles.saveSneaker(sneakers);
+            saver.saveSneaker(sneakers);
             break;
         case 6:
             System.out.println("*ВЫХОД*");
@@ -417,25 +420,25 @@ private void changeBuyer(){
             System.out.print("Введите новое имя покупателя: ");
             String newName=(scan.nextLine());
             buyers.get(numbuyer-1).setBuyerFirstName(newName);
-            saverToFiles.saveBuyers(buyers);
+            saver.saveBuyers(buyers);
             break;
         case 2:
             System.out.print("Введите новую фамилию покупателя: ");
             String newName2=(scan.nextLine());
             buyers.get(numbuyer-1).setBuyerLastName(newName2);
-            saverToFiles.saveBuyers(buyers);
+            saver.saveBuyers(buyers);
             break;
         case 3:
             System.out.print("Введите новый телефон покупателя: ");
             String newTel=(scan.nextLine());
             buyers.get(numbuyer-1).setBuyerPhone(newTel);
-            saverToFiles.saveBuyers(buyers);
+            saver.saveBuyers(buyers);
             break;
         case 4:
             System.out.print("Введите новое количество денег у покупателя: ");
             double newMoney=scan.nextDouble();scan.nextLine();
             buyers.get(numbuyer-1).setBuyerMoney(newMoney);
-            saverToFiles.saveBuyers(buyers);
+            saver.saveBuyers(buyers);
             break;
         case 5:
             System.out.println("*ВЫХОД*");

@@ -6,14 +6,25 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author krasa
  */
+@Entity
 public class Sneaker implements Serializable {
-    private Brand sneakerFirm;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String sneakerModel;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Brand sneakerFirm;
     private double sneakerSize;
     private double sneakerPrice;
     private int sneakerQuantity;
@@ -61,5 +72,13 @@ public class Sneaker implements Serializable {
 
     public void setSneakerFirm(Brand sneakerFirm) {
         this.sneakerFirm = sneakerFirm;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

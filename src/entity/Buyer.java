@@ -6,12 +6,20 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
  * @author Deniss
  */
+@Entity
 public class Buyer implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String buyerFirstName;
     private String buyerLastName;
     private String buyerPhone;
@@ -52,5 +60,13 @@ public class Buyer implements Serializable {
     @Override
     public String toString() {
         return "покупателя: " + buyerFirstName +" "+ buyerLastName + ", номер телефона: " + buyerPhone + ", деньги: " + buyerMoney +" евро"+' ';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
