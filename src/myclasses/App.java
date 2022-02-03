@@ -10,15 +10,23 @@ import entity.Brand;
 import entity.Sneaker;
 import entity.Buyer;
 import entity.History;
-import interfaces.Keeping;
+import entity.Role;
+import entity.User;
+import entity.UserRoles;
+import facade.BrandFacade;
+import facade.BuyerFacade;
+import facade.HistoryFacade;
+import facade.RoleFacade;
+import facade.SneakerFacade;
+import facade.UserFacade;
+import facade.UserRolesFacade;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
-import tools.SaverToBase;
-import tools.SaverToFiles;
+import java.util.Set;
 
 
 /**
@@ -26,19 +34,24 @@ import tools.SaverToFiles;
  * @author krasa
  */
 public class App {
-    Scanner scan = new Scanner(System.in);
-    private List<Sneaker> sneakers= new ArrayList<>();
-    private List<Buyer> buyers= new ArrayList<>();
-    private List<History> histories= new ArrayList<>();
-    private final SaverToFiles saverToFiles = new SaverToFiles();
-    private List<Brand> brands = new ArrayList<>();
-    private final Keeping saver = new SaverToBase();
-    
-    public App(){
-    this.sneakers = saver.loadSneaker();
-    this.buyers = saver.loadBuyers();
-    this.histories = saver.loadHistory();
-    this.brands = saver.loadBrand();
+      
+   Scanner scan = new Scanner(System.in);
+   private UserRolesFacade userRolesFacade;
+   private UserFacade userFacade;
+   private RoleFacade roleFacade;
+   private BuyerFacade buyerFacade;
+   private SneakerFacade sneakerFacade;
+   private BrandFacade brandFacade;
+   private HistoryFacade historyFacade;
+//    
+   public App(){
+      userFacade= new UserFacade();
+      roleFacade= new RoleFacade();
+      userRolesFacade= new UserRolesFacade();
+      buyerFacade = new BuyerFacade(Buyer.class);
+      sneakerFacade = new SneakerFacade(Sneaker.class);
+      brandFacade = new BrandFacade(Brand.class);
+      historyFacade = new HistoryFacade(History.class);
     }   
 
     public void run(){
@@ -51,13 +64,12 @@ public class App {
             System.out.println("4. Добавить покупателя");
             System.out.println("5. Список покупателей");
             System.out.println("6. Покупка обуви");
-            System.out.println("7. Доход магазина за все время");
+            System.out.println("7. Доход магазина");
             System.out.println("8. Добавить деньги пользователю");
             System.out.println("9. Поступление кроссовок");
             System.out.println("10. Вывести базу фирм кроссовок");
             System.out.println("11. Редактировать кроссовки");
             System.out.println("12. Редактировать покупателя");
-            System.out.println("13. Вывести доход за определенный месяц");
             System.out.print("Выберите задачу: ");
             int task= getNumber();
             switch(task){
@@ -80,7 +92,7 @@ public class App {
                     purchase();
                     break;
                 case 7:
-                    income();
+                    IncomePerMonth();
                     break;
                 case 8:
                     addMoney();
@@ -98,7 +110,7 @@ public class App {
                     changeBuyer();
                     break;
                 case 13:
-                    IncomePerMonth();
+                    addSuperUser();
                     break;
                 default:
                     System.out.println("Выберите номер из списка!");
@@ -110,11 +122,12 @@ public class App {
 //------------------------------------------------------------------------------
 private void sneakerList(){
     System.out.println("*СПИСОК КРОССОВОК*");
+    List<Sneaker> sneakers = sneakerFacade.findAll();
     int n=0;
     for (int i = 0; i < sneakers.size(); i++) {
         if(sneakers.get(i)!=null){
             System.out.printf("%d. %s %s, размер: %.0f, цена: %.2f евро, в наличии: %d%n",
-            i+1,
+            sneakers.get(i).getId(),
             sneakers.get(i).getSneakerFirm().getBrand(),
             sneakers.get(i).getSneakerModel(),
             sneakers.get(i).getSneakerSize(),
@@ -131,11 +144,12 @@ private void sneakerList(){
 //------------------------------------------------------------------------------
 private void buyerList(){
     System.out.println("*СПИСОК ПОКУПАТЕЛЕЙ*");
+    List<Buyer> buyers = buyerFacade.findAll();
     int n=0;
     for (int i = 0; i < buyers.size(); i++) {
         if(buyers.get(i)!=null){
             System.out.printf("%d. %s %s, номер телефона: %s, доступные деньги: %.2f евро%n",
-            i+1,
+            buyers.get(i).getId(),
             buyers.get(i).getBuyerFirstName(),
             buyers.get(i).getBuyerLastName(),
             buyers.get(i).getBuyerPhone(),
@@ -164,14 +178,14 @@ private void addSneaker(){
         case 1:
             System.out.print("Введите фирму кроссовка: ");
             brand.setBrand(scan.nextLine());
+            brandFacade.create(brand);
             sneaker.setSneakerFirm(brand);
-            brands.add(brand);
             i++;
             break;
         case 0:
             System.out.print("Введите номер нужной фирмы: ");
             int choice2=getNumber();
-            sneaker.setSneakerFirm(brands.get(choice2-1));
+            sneaker.setSneakerFirm(brandFacade.find((long)choice2));
             i++;
             break;
         default:
@@ -186,9 +200,7 @@ private void addSneaker(){
     System.out.print("Введите цену кроссовка: ");
     sneaker.setSneakerPrice(scan.nextDouble()); scan.nextLine();
     System.out.println("Вы добавили"+sneaker.toString());
-    sneakers.add(sneaker);
-    saver.saveSneaker(sneakers);
-    saver.saveBrand(brands);
+    sneakerFacade.create(sneaker);
 }  
 //------------------------------------------------------------------------------
 private void addBuyer(){
@@ -203,8 +215,7 @@ private void addBuyer(){
     System.out.print("Введите количество денег у покупателя: ");
     buyer.setBuyerMoney(scan.nextDouble()); scan.nextLine();
     System.out.println("Вы добавили "+buyer.toString());
-    buyers.add(buyer);
-    saver.saveBuyers(buyers);
+    buyerFacade.create(buyer);
 }
 //------------------------------------------------------------------------------
 private void purchase(){
@@ -220,8 +231,8 @@ private void purchase(){
         System.out.print("Выберите нужную модель обуви: ");
         int sneakerNum= getNumber();
         History history= new History();
-        history.setSneaker(sneakers.get(sneakerNum-1));
-        history.setBuyer(buyers.get(buyerNum-1));
+        history.setSneaker(sneakerFacade.find((long) sneakerNum));
+        history.setBuyer(buyerFacade.find((long)buyerNum));
         Calendar c = new GregorianCalendar();
         history.setGivenSneaker(c.getTime());
         if(history.getBuyer().getBuyerMoney()>=history.getSneaker().getSneakerPrice() && history.getSneaker().getSneakerQuantity()!=0){
@@ -236,10 +247,7 @@ private void purchase(){
             );
             history.getBuyer().setBuyerMoney(history.getBuyer().getBuyerMoney()-history.getSneaker().getSneakerPrice());
             history.getSneaker().setSneakerQuantity(history.getSneaker().getSneakerQuantity()-1);
-            histories.add(history);
-            saver.saveHistory(histories);
-            saver.saveSneaker(sneakers);
-            saver.saveBuyers(buyers);
+            historyFacade.create(history);
             
             n++;
         }else if(history.getBuyer().getBuyerMoney()<history.getSneaker().getSneakerPrice()){
@@ -252,6 +260,7 @@ private void purchase(){
 //------------------------------------------------------------------------------
 private void income(){
     double income = 0;
+    List<History> histories = historyFacade.findAll();
     System.out.println("*ОБЩИЙ ДОХОД*");
     for (int i = 0; i < histories.size(); i++) {
         Date date = histories.get(i).getGivenSneaker();
@@ -268,10 +277,12 @@ private void addMoney(){
     buyerList();
     System.out.print("Выберите нужного покупателя: ");
     int choice= getNumber();
+    Buyer buyer = buyerFacade.find((long) choice);
     System.out.print("Введите сколько денег вы хотите добавить этому покупателю: ");
     double add= scan.nextDouble(); scan.nextLine();
-    buyers.get(choice-1).setBuyerMoney(buyers.get(choice-1).getBuyerMoney()+add);
-    saver.saveBuyers(buyers);
+    buyer.setBuyerMoney(buyer.getBuyerMoney()+add);
+    buyerFacade.edit(buyer);
+    //buyers.get(choice-1).setBuyerMoney(buyers.get(choice-1).getBuyerMoney()+add);
     }
 //------------------------------------------------------------------------------
 private int getNumber(){
@@ -295,18 +306,23 @@ private void addQuantitySneaker(){
     sneakerList();
     System.out.print("Введите номер кроссовка для добавления количества: ");
     int num=getNumber();
+    Sneaker sneaker = sneakerFacade.find((long)num);
     System.out.print("Введите сколько пар кроссовок поступило: ");
     int add=getNumber();
-    sneakers.get(num-1).setSneakerQuantity(sneakers.get(num-1).getSneakerQuantity()+add);
-    saver.saveSneaker(sneakers);}
+    sneaker.setSneakerQuantity(sneaker.getSneakerQuantity()+add);
+    sneakerFacade.edit(sneaker);
+//    sneakers.get(num-1).setSneakerQuantity(sneakers.get(num-1).getSneakerQuantity()+add);
+//    saver.saveSneaker(sneakers);
+}
 //------------------------------------------------------------------------------
 private void listBrands(){
     int n =0;
+    List<Brand> brands= brandFacade.findAll();
     for (int i = 0; i < brands.size(); i++) {
         if(brands.get(i)!=null){
             n++;
             System.out.printf("%d. %s%n",
-            i+1,
+            brands.get(i).getId(),
             brands.get(i).getBrand()
             );
         n++;
@@ -322,6 +338,8 @@ private void changeSneaker(){
     sneakerList();
     System.out.print("Выберите кроссовок для редактирования: ");
     int numsneaker= getNumber();
+    Sneaker sneakers= sneakerFacade.find((long) numsneaker);
+    Brand brand= new Brand();
     int n = 0;
     while(n==0){
     System.out.println("-------------------------");
@@ -342,21 +360,18 @@ private void changeSneaker(){
             int choice=getNumber();
             switch (choice) {
                 case 1:
-                    System.out.print("Введите новую фирму кроссовок: ");
-                    Brand newnewBrand= new Brand();
-                    String newBrand=(scan.nextLine());
-                    sneakers.get(numsneaker-1).getSneakerFirm().setBrand(newBrand);
-                    newnewBrand.setBrand(newBrand);
-                    brands.add(newnewBrand);
-                    saver.saveSneaker(sneakers);
-                    saver.saveBrand(brands);
+                    System.out.print("Введите фирму кроссовка: ");
+                    brand.setBrand(scan.nextLine());
+                    brandFacade.create(brand);
+                    sneakers.setSneakerFirm(brand);
+                    sneakerFacade.edit(sneakers);
                     i++;
                     break;
                 case 0:
                     System.out.print("Введите номер нужной фирмы: ");
                     int choice2=getNumber();
-                    sneakers.get(numsneaker-1).setSneakerFirm(brands.get(choice2-1));
-                    saver.saveSneaker(sneakers);
+                    sneakers.setSneakerFirm(brandFacade.find((long)choice2));
+                    sneakerFacade.edit(sneakers);
                     i++;
                     break;
                 default:
@@ -367,27 +382,23 @@ private void changeSneaker(){
             break;
         case 2:
             System.out.print("Введите новую модель кроссовок: ");
-            String newaspect=(scan.nextLine());
-            sneakers.get(numsneaker-1).setSneakerModel(newaspect);
-            saver.saveSneaker(sneakers);
+            sneakers.setSneakerModel(scan.nextLine());
+            sneakerFacade.edit(sneakers);
             break;
         case 3:
             System.out.print("Введите новый размер кроссовок: ");
-            int newaspect2=getNumber();
-            sneakers.get(numsneaker-1).setSneakerSize(newaspect2);
-            saver.saveSneaker(sneakers);
+            sneakers.setSneakerSize(scan.nextDouble());scan.nextLine();
+            sneakerFacade.edit(sneakers);
             break;
         case 4:
             System.out.print("Введите новую цену кроссовок: ");
-            double newaspect3=scan.nextDouble();scan.nextLine();
-            sneakers.get(numsneaker-1).setSneakerPrice(newaspect3);
-            saver.saveSneaker(sneakers);
+            sneakers.setSneakerPrice(scan.nextDouble());scan.nextLine();
+            sneakerFacade.edit(sneakers);
             break;
         case 5:
            System.out.print("Введите новое количество кроссовок: ");
-            int newaspect4=getNumber();
-            sneakers.get(numsneaker-1).setSneakerQuantity(newaspect4);
-            saver.saveSneaker(sneakers);
+            sneakers.setSneakerQuantity(getNumber());
+            sneakerFacade.edit(sneakers);
             break;
         case 6:
             System.out.println("*ВЫХОД*");
@@ -404,7 +415,7 @@ private void changeBuyer(){
     System.out.println("*РЕДАКТИРОВАТЬ ПОКУПАТЕЛЯ*");
     buyerList();
     System.out.print("Выберите покупателя для редактирования: ");
-    int numbuyer= getNumber();
+    Buyer buyers = buyerFacade.find((long)getNumber());
     int n = 0;
     while(n==0){
     System.out.println("-------------------------");
@@ -418,27 +429,23 @@ private void changeBuyer(){
     switch(numchange){
         case 1:
             System.out.print("Введите новое имя покупателя: ");
-            String newName=(scan.nextLine());
-            buyers.get(numbuyer-1).setBuyerFirstName(newName);
-            saver.saveBuyers(buyers);
+            buyers.setBuyerFirstName(scan.nextLine());
+            buyerFacade.edit(buyers);
             break;
         case 2:
             System.out.print("Введите новую фамилию покупателя: ");
-            String newName2=(scan.nextLine());
-            buyers.get(numbuyer-1).setBuyerLastName(newName2);
-            saver.saveBuyers(buyers);
+            buyers.setBuyerLastName(scan.nextLine());
+            buyerFacade.edit(buyers);
             break;
         case 3:
             System.out.print("Введите новый телефон покупателя: ");
-            String newTel=(scan.nextLine());
-            buyers.get(numbuyer-1).setBuyerPhone(newTel);
-            saver.saveBuyers(buyers);
+            buyers.setBuyerPhone(scan.nextLine());
+            buyerFacade.edit(buyers);
             break;
         case 4:
             System.out.print("Введите новое количество денег у покупателя: ");
-            double newMoney=scan.nextDouble();scan.nextLine();
-            buyers.get(numbuyer-1).setBuyerMoney(newMoney);
-            saver.saveBuyers(buyers);
+            buyers.setBuyerMoney(scan.nextDouble());scan.nextLine();
+            buyerFacade.edit(buyers);
             break;
         case 5:
             System.out.println("*ВЫХОД*");
@@ -454,7 +461,8 @@ private void changeBuyer(){
 //------------------------------------------------------------------------------
 private void IncomePerMonth(){
     double income = 0;
-    System.out.println("*ДОХОД ЗА ОПРЕДЕЛЕННЫЙ МЕСЯЦ*");
+    List<History> histories= historyFacade.findAll();
+    System.out.println("*ДОХОД МАГАЗИНА*");
     System.out.println("1 - Январь");
     System.out.println("2 - Февраль");
     System.out.println("3 - Март");
@@ -467,19 +475,27 @@ private void IncomePerMonth(){
     System.out.println("10 - Октябрь");
     System.out.println("11 - Ноябрь");
     System.out.println("12 - Декабрь");
+    System.out.println("13 - Вывести доход за все время");
     System.out.print("Введите нужный месяц: ");
-    int choicemonth=getNumber()-1;
+    int choicemonth=getNumber();
+    switch(choicemonth){
+        case 13:
+           income();
+           break;
+        default:      
     System.out.print("Введите год: ");
     int years=getNumber();
     for (int i = 0; i < histories.size(); i++) {
         Date date = histories.get(i).getGivenSneaker();
-        boolean toSum = summator(date, choicemonth, years);
+        boolean toSum = summator(date, choicemonth-1, years);
         if (histories.get(i)!=null & toSum) {
            income+=histories.get(i).getSneaker().getSneakerPrice();
         }
         
     }
     System.out.printf("Доход за выбранный месяц: %s евро%n", income);
+            break;
+    }
 }
     private boolean summator(Date date, int choicemonth, int years) {
         Calendar cal = Calendar.getInstance();
@@ -491,6 +507,46 @@ private void IncomePerMonth(){
     }
         return false;
     }
+    private void addSuperUser(){
+        List<User> users = userFacade.findAll();
+        if(!users.isEmpty()){return;}
+        Buyer buyer = new Buyer();
+        buyer.setBuyerFirstName("Artjom");
+        buyer.setBuyerLastName("Mihhailov");
+        buyer.setBuyerPhone("+3725856732");
+        buyerFacade.create(buyer);
+        User user = new User();
+        user.setLogin("admin");
+        user.setPassword("12345");
+        user.setBuyer(buyer);
+        userFacade.create(user);
+        Role role = new Role();
+        role.setRoleName("ADMINISTRATOR");
+        roleFacade.create(role);
+        UserRoles userRoles = new UserRoles();
+        userRoles.setUser(user);
+        userRoles.setRole(role);
+        userRolesFacade.create(userRoles);
+        
+        role = new Role();
+        role.setRoleName("MANAGER");
+        roleFacade.create(role);
+        userRoles = new UserRoles();
+        userRoles.setUser(user);
+        userRoles.setRole(role);
+        userRolesFacade.create(userRoles);
+        
+        role = new Role();
+        role.setRoleName("BUYER");
+        roleFacade.create(role);
+        userRoles = new UserRoles();
+        userRoles.setUser(user);
+        userRoles.setRole(role);
+        userRolesFacade.create(userRoles);
+        
+       
+    
+}
 }
 
 

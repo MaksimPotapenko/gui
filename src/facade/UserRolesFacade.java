@@ -5,7 +5,8 @@
  */
 package facade;
 
-import entity.Sneaker;
+import entity.Buyer;
+import entity.UserRoles;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -15,7 +16,7 @@ import javax.persistence.Persistence;
  *
  * @author user
  */
-public class SneakerFacade extends AbstractFacade<Sneaker>{
+public class UserRolesFacade extends AbstractFacade<UserRoles>{
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("SPTV20BootsShopPU");
     private EntityManager em = emf.createEntityManager();
     private EntityTransaction tx = em.getTransaction();
@@ -24,9 +25,9 @@ public class SneakerFacade extends AbstractFacade<Sneaker>{
     protected EntityManager getEntityManager() {
         return em;
     }
-
-    public SneakerFacade(Class<Sneaker> entityClass) {
-        super(entityClass);
+    
+    public UserRolesFacade() {
+        super(UserRoles.class);
     }
     
 }

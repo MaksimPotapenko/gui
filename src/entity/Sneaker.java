@@ -23,7 +23,7 @@ public class Sneaker implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String sneakerModel;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private Brand sneakerFirm;
     private double sneakerSize;
     private double sneakerPrice;
@@ -63,7 +63,7 @@ public class Sneaker implements Serializable {
     }
     @Override
     public String toString() {
-        return " кроссовок: " + sneakerFirm.getBrand() +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро, " + sneakerQuantity + " шт." + ' ';
+        return  sneakerFirm.getBrand() +" "+ sneakerModel + ", размер: " + sneakerSize + ", цена: " + sneakerPrice + " евро, " + sneakerQuantity + " шт." + ' ';
     }
 
     public Brand getSneakerFirm() {

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.metamodel.SingularAttribute;
 
 /**
  *
@@ -59,7 +60,7 @@ public class Buyer implements Serializable {
     }
     @Override
     public String toString() {
-        return "покупателя: " + buyerFirstName +" "+ buyerLastName + ", номер телефона: " + buyerPhone + ", деньги: " + buyerMoney +" евро"+' ';
+        return buyerFirstName +" "+ buyerLastName + ", телефон: " + buyerPhone + ", деньги: " + buyerMoney +" евро"+' ';
     }
 
     public Long getId() {
@@ -68,5 +69,9 @@ public class Buyer implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Buyer[] setBuyerFirstName(SingularAttribute<Buyer, String> buyerFirstName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
