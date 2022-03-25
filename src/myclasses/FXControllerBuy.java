@@ -10,6 +10,7 @@ import facade.HistoryFacade;
 import facade.SneakerFacade;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -46,8 +47,63 @@ public class FXControllerBuy {
 
         window.setScene(tableViewScene);
         window.show();
-}
-    
+    }
+
+    @FXML
+    void changeScreenButtonPushedMoney(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleMoney.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedEditingSneaker(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingSneaker.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedEditingUser(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingUser.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedIncome(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleIncome.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedReceipt(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleReceipt.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
     @FXML
     void changeScreenButtonPushedUser(ActionEvent event) throws IOException {
         Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleUser.fxml"));
@@ -58,11 +114,12 @@ public class FXControllerBuy {
         window.setScene(tableViewScene);
         window.show();
     }
-    
+
     @FXML
-    public void handleCloseButtonAction(ActionEvent event) {
-    ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
-    }  
+    void handleCloseButtonAction(ActionEvent event) {
+        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+    }
+
     
     @FXML
     private ResourceBundle resources;
@@ -74,19 +131,7 @@ public class FXControllerBuy {
     private Button btnAddPerhapse;
 
     @FXML
-    private Button btnCloseProgram;
-
-    @FXML
-    private Button btnMenuIncome;
-
-    @FXML
     private Button btnReload;
-
-    @FXML
-    private AnchorPane dropDownEmpty;
-
-    @FXML
-    private AnchorPane gggg;
 
     @FXML
     private ListView<Sneaker> listSneaker;
@@ -122,7 +167,6 @@ public class FXControllerBuy {
                 Calendar c = new GregorianCalendar();
                 history.setGivenSneaker(c.getTime());
                 if(history.getBuyer().getBuyerMoney()>=history.getSneaker().getSneakerPrice() && history.getSneaker().getSneakerQuantity()!=0){
-                txtFieldAddPerhapseInfo.setStyle("-fx-fill: #00ff2b;");
                 txtFieldAddPerhapseInfo.setText("Вы добавили покупку в базу!");
                 txtFieldAddPerhapseInfo.setVisible(true);
                 history.getBuyer().setBuyerMoney(history.getBuyer().getBuyerMoney()-history.getSneaker().getSneakerPrice());
@@ -134,12 +178,10 @@ public class FXControllerBuy {
 
                     n++;
                 }else if(history.getBuyer().getBuyerMoney()<history.getSneaker().getSneakerPrice()){
-                    txtFieldAddPerhapseInfo.setStyle("-fx-fill: red;");
                     txtFieldAddPerhapseInfo.setText("Этот покупатель не может совершить покупку, так как у него не хватает денег!");
                     txtFieldAddPerhapseInfo.setVisible(true);
                     n++;
                 }else if(history.getSneaker().getSneakerQuantity()==0){
-                    txtFieldAddPerhapseInfo.setStyle("-fx-fill: red;");
                     txtFieldAddPerhapseInfo.setText("Этого товара нет в наличии, выберите другой!");
                     txtFieldAddPerhapseInfo.setVisible(true);
                     n++;
@@ -148,13 +190,15 @@ public class FXControllerBuy {
         });
         
         btnReload.setOnAction((event) -> {
+            listSneaker.getItems().clear();
+            listUser.getItems().clear();
             btnReload.setVisible(false);
             txtFieldAddPerhapseInfo.setVisible(false);
             List<Sneaker> sneakers = sneakerFacade.findAll();
             for (int i = 0; i < sneakers.size(); i++) {
                listSneaker.getItems().addAll(sneakers.get(i));
             }
-            List<Buyer> buyers = buyerFacade.findAll();
+            List<Buyer> buyers = buyerFacade.findAll(); 
                 for (int i = 0; i < buyers.size(); i++) {
                     listUser.getItems().addAll(buyers.get(i));
             }

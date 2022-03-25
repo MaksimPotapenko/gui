@@ -4,14 +4,11 @@ import entity.Brand;
 import entity.Buyer;
 import entity.History;
 import entity.Sneaker;
-import static entity.UserRoles_.user;
 import facade.BrandFacade;
 import facade.BuyerFacade;
 import facade.HistoryFacade;
-import facade.RoleFacade;
 import facade.SneakerFacade;
 import facade.UserFacade;
-import facade.UserRolesFacade;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -47,29 +44,88 @@ public class FXControllerUser {
     private BrandFacade brandFacade;
     private HistoryFacade historyFacade;
     
-    public void changeScreenButtonPushed(ActionEvent event) throws IOException{
-    Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sample.fxml"));
-    Scene tableViewScene = new Scene(tableViewParent);
-
-    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-    window.setScene(tableViewScene);
-    window.show();
-    }
-    public void changeScreenButtonPushedBuy(ActionEvent event) throws IOException{
-    Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleBuy.fxml"));
-    Scene tableViewScene = new Scene(tableViewParent);
-
-    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-    window.setScene(tableViewScene);
-    window.show();
-    }
-    
     @FXML
-    public void handleCloseButtonAction(ActionEvent event) {
-    ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
-    }  
+    void changeScreenButtonPushed(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sample.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedBuy(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleBuy.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedEditingSneaker(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingSneaker.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedEditingUser(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingUser.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedIncome(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleIncome.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedReceipt(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleReceipt.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void changeScreenButtonPushedMoney(ActionEvent event) throws IOException {
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleMoney.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+
+    @FXML
+    void handleCloseButtonAction(ActionEvent event) {
+        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+    }
+
     
      @FXML
     private ResourceBundle resources;

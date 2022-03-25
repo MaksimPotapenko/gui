@@ -4,14 +4,11 @@ import entity.Brand;
 import entity.Buyer;
 import entity.History;
 import entity.Sneaker;
-import static entity.UserRoles_.user;
 import facade.BrandFacade;
 import facade.BuyerFacade;
 import facade.HistoryFacade;
-import facade.RoleFacade;
 import facade.SneakerFacade;
 import facade.UserFacade;
-import facade.UserRolesFacade;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -47,23 +44,80 @@ public class FXController {
     private BrandFacade brandFacade;
     private HistoryFacade historyFacade;
     
+    @FXML
     public void changeScreenButtonPushed(ActionEvent event) throws IOException{
-    Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleUser.fxml"));
-    Scene tableViewScene = new Scene(tableViewParent);
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleUser.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
 
-    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-    window.setScene(tableViewScene);
-    window.show();
+        window.setScene(tableViewScene);
+        window.show();
     }
+    @FXML
     public void changeScreenButtonPushedBuy(ActionEvent event) throws IOException{
-    Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleBuy.fxml"));
-    Scene tableViewScene = new Scene(tableViewParent);
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleBuy.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
 
-    Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
 
-    window.setScene(tableViewScene);
-    window.show();
+        window.setScene(tableViewScene);
+        window.show();
+    }
+    
+    @FXML
+    public void changeScreenButtonPushedIncome(ActionEvent event) throws IOException{
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleIncome.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+    
+    @FXML
+    public void changeScreenButtonPushedMoney(ActionEvent event) throws IOException{
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleMoney.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+    
+    @FXML
+    public void changeScreenButtonPushedReceipt(ActionEvent event) throws IOException{
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleReceipt.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+    
+    @FXML
+    public void changeScreenButtonPushedEditingSneaker(ActionEvent event) throws IOException{
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingSneaker.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
+    }
+    
+    @FXML
+    public void changeScreenButtonPushedEditingUser(ActionEvent event) throws IOException{
+        Parent tableViewParent = FXMLLoader.load(getClass().getResource("/myclasses/sampleEditingUser.fxml"));
+        Scene tableViewScene = new Scene(tableViewParent);
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        window.setScene(tableViewScene);
+        window.show();
     }
     
     @FXML
@@ -134,6 +188,8 @@ public class FXController {
     @FXML
     private Button tratre;
     
+    int firm=0;
+    
     public FXController(){
       buyerFacade = new BuyerFacade(Buyer.class);
       sneakerFacade = new SneakerFacade(Sneaker.class);
@@ -150,6 +206,7 @@ public class FXController {
         txtFieldAddSneakerInfo.setVisible(false);
         txtFieldFirm.setEditable(false);
         btnReload.setVisible(false);
+        
         
         List<Brand> brands = brandFacade.findAll();
         dropDownMenu.setConverter(new StringConverter<Brand>(){
@@ -177,15 +234,9 @@ public class FXController {
         radioBtnNew.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                dropDownMenuHide.setVisible(true);
-                dropDownMenu.setValue(null);
-                txtFieldFirm.setEditable(true);
                 txtFieldFirm.setText("");
-                txtFieldFirm.setPromptText("Введите новую фирму!");
-                brand.setBrand(txtFieldFirm.getText());
-                brandFacade.create(brand);
-                sneaker.setSneakerFirm(brand);
-                
+                txtFieldFirm.setEditable(true);
+                dropDownMenuHide.setVisible(true);
             }
         });
         radioBtnOld.setOnAction(new EventHandler<ActionEvent>() {
@@ -194,11 +245,11 @@ public class FXController {
                 dropDownMenuHide.setVisible(false);
                 dropDownMenu.setVisible(true);
                 txtFieldFirm.setEditable(false);
-                txtFieldFirm.setText("");
-                txtFieldFirm.setPromptText("Выберите фирму из списка!");
-                
+                txtFieldFirm.setText(""); 
             }
         });
+        
+        
         txtFieldSize.textProperty().addListener((observable, oldValue, newValue) -> {
         if (newValue.matches("\\d*")) return;
         txtFieldSize.setText(newValue.replaceAll("[^\\d]", ""));  
@@ -223,9 +274,9 @@ public class FXController {
             brandFacade.create(brand);  
             sneaker.setSneakerFirm(brand);
             }else if(radioBtnOld.isSelected()){
-                String firmId=txtFieldFirm.getText();
-                int firm= Integer.parseInt(firmId);
-                sneaker.setSneakerFirm(brandFacade.find((long)firm));
+                int firmId=4;
+                
+                sneaker.setSneakerFirm(brandFacade.find((long)firmId));
             }
             sneaker.setSneakerModel(txtFieldModel.getText());
             int size = Integer.parseInt(txtFieldSize.getText());
@@ -256,9 +307,10 @@ public class FXController {
         //------------------------------------
     }
     public void getFirm(ActionEvent event){
-        int firmId=dropDownMenu.getSelectionModel().getSelectedIndex()+1;
-        String firm=String.valueOf(firmId);
-        txtFieldFirm.setText(firm);
+        long firmId=dropDownMenu.getValue().getId();
+        firm=(int)firmId;
+        System.out.println(firm);
+        txtFieldFirm.setText(brandFacade.find(firmId).getBrand()); 
     }
     private boolean validateFields(){
         if(txtFieldFirm.getText().isEmpty() | txtFieldModel.getText().isEmpty() | txtFieldPrice.getText().isEmpty() | txtFieldSize.getText().isEmpty() | txtFieldQuantity.getText().isEmpty()) {

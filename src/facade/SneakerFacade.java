@@ -16,7 +16,7 @@ import javax.persistence.Persistence;
  * @author user
  */
 public class SneakerFacade extends AbstractFacade<Sneaker>{
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("SPTV20BootsShopPU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("MaximGuiPU");
     private EntityManager em = emf.createEntityManager();
     private EntityTransaction tx = em.getTransaction();
     
